@@ -3,7 +3,7 @@ from typing import List
 from abc import ABC, abstractmethod
 from sqlalchemy import select, insert, delete, update, desc
 
-from src.db.db import async_session_maker
+from src.db.db import async_session_maker, get_redis
 from src.schemas.users import UserSchema
 
 
@@ -27,12 +27,18 @@ class AbstractRepositories(ABC):
 
 class SQLAlchemyRepositories(AbstractRepositories):
     model = None
+    def __init__(self):
+        self.redis = get_redis()
 
     async def find_all(self) -> List[UserSchema]:
+        models = self.redis.get('all_users')
+        if not models is None:
+            return models
         async with async_session_maker() as session:
             stmt = select(self.model)  # type: ignore
             models = await session.execute(stmt)
             models = [row[0].to_read_model() for row in models.all()]
+            await self.redis.rpush('all_users', *models)
             return models
 
     async def add_one(self, data: dict):
