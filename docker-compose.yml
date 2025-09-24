@@ -2,9 +2,6 @@ services:
   leaderboard:
     container_name: leaderboard-container
     image: leaderboard-image
-    depends_on:
-      - redis
-      - postgres
     ports:
       - '8000:8000'
   redis:
