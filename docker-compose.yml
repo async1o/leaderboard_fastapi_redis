@@ -4,6 +4,7 @@ services:
     image: leaderboard-image
     ports:
       - '8000:8000'
+
   redis:
     container_name: redis
     image: redis
