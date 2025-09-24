@@ -2,8 +2,8 @@ services:
   redis:
     container_name: redis
     image: redis
-    networks:
-      - container:leaderboard-container
+    network_mode: container:leaderboard
+
   postgres:
     container_name: postgres
     image: postgres:16
@@ -11,8 +11,8 @@ services:
       - .env
     environment:
       - POSTGRES_PASSWORD=DB_PASS
-    networks:
-      - container:leaderboard-container
+    network_mode: container:leaderboard
+
   leaderboard:
     container_name: leaderboard-container
     image: leaderboard-image
