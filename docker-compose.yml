@@ -1,4 +1,13 @@
 services:
+  leaderboard:
+    container_name: leaderboard-container
+    image: leaderboard-image
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - '8000:8000'
+      -
   redis:
     container_name: redis
     image: redis
@@ -17,11 +26,3 @@ services:
       - POSTGRES_PASSWORD=DB_PASS
     network_mode: container:leaderboard-container
 
-  leaderboard:
-    container_name: leaderboard-container
-    image: leaderboard-image
-    depends_on:
-      - redis
-      - postgres
-    ports:
-      - '8000:8000'
