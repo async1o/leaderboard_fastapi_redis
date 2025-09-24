@@ -2,7 +2,7 @@ from typing import List
 from pydantic import BaseModel
 
 class UserSchema(BaseModel):
-    user_id: int
+    id: int
     username: str
     email: str
     password: str

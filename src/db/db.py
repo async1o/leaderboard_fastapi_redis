@@ -13,11 +13,13 @@ async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 class Base(DeclarativeBase):
     pass
 
-async def reset_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-
 def get_redis() -> Redis:
     redis = Redis(host='localhost', port=6379, db=0)
     return redis
+
+async def reset_tables():
+    redis = get_redis()
+    redis.flushall()
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)

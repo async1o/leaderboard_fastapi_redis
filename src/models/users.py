@@ -14,7 +14,7 @@ class UsersModel(Base):
 
     def to_read_model(self) -> UserSchema:
         return UserSchema(
-            user_id=self.id,
+            id=self.id,
             username=self.username,
             email=self.email,
             password=self.password,
