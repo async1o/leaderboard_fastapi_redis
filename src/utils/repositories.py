@@ -44,7 +44,7 @@ class SQLAlchemyRepositories(AbstractRepositories):
             models = await session.execute(stmt)
             models = [row[0].to_read_model() for row in models.all()]
             for model in models:
-                self.redis.hmset(f'user:{model.id}', model.model_dump())
+                await self.redis.hmset(f'user:{model.id}', model.model_dump())
             return models
 
     async def add_one(self, data: dict):
@@ -58,8 +58,7 @@ class SQLAlchemyRepositories(AbstractRepositories):
 
     async def update_one(self, entity_id: int, data: dict):
         async with async_session_maker() as session:
-            stmt = update(self.model).where(self.model.id == entity_id).values(**data).returning(
-                self.model)  # type: ignore
+            stmt = update(self.model).where(self.model.id == entity_id).values(**data).returning(self.model)  # type: ignore
             model = await session.execute(stmt)
             model = model.scalar_one().to_read_model()
             await session.commit()
@@ -87,7 +86,6 @@ class LeaderBoardRepositories:
             await session.commit()
 
     async def get_leaderboard(self):
-
         async with async_session_maker() as session:
             stmt = select(self.model).order_by(desc(self.model.points))
             result = await session.execute(stmt)
