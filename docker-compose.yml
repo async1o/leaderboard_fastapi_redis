@@ -2,16 +2,20 @@ services:
   redis:
     container_name: redis
     image: redis
-    network_mode: container:leaderboard
+    stdin_open: true
+    tty: true
+    network_mode: container:leaderboard-container
 
   postgres:
     container_name: postgres
     image: postgres:16
+    stdin_open: true
+    tty: true
     env_file:
       - .env
     environment:
       - POSTGRES_PASSWORD=DB_PASS
-    network_mode: container:leaderboard
+    network_mode: container:leaderboard-container
 
   leaderboard:
     container_name: leaderboard-container
