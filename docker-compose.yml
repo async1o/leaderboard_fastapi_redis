@@ -3,7 +3,7 @@ services:
     container_name: redis
     image: redis
     networks:
-      - container:leaderboard
+      - container:leaderboard-container
   postgres:
     container_name: postgres
     image: postgres:16
@@ -12,7 +12,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=DB_PASS
     networks:
-      - container:leaderboard
+      - container:leaderboard-container
   leaderboard:
     container_name: leaderboard-container
     image: leaderboard-image
